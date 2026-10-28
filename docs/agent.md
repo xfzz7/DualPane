@@ -4,7 +4,7 @@
 
 不要向电视发送遥控器按键。启动应用用下面的 `am start`，那不是按键。
 
-应用 id 是 `tv.naughty.dual`，列表里的名字是「双屏」，版本是 1.0。
+应用 id 是 `io.github.xfzz7.dualpane`，列表里的名字是「双屏」，版本是 1.0。
 
 ## 电脑上要有
 
@@ -55,7 +55,7 @@ gradlew.bat :app:assembleDebug
 ```
 adb connect <电视地址>
 adb install -r app/build/outputs/apk/debug/app-debug.apk
-adb shell am start -n tv.naughty.dual/.MainActivity
+adb shell am start -n io.github.xfzz7.dualpane/.MainActivity
 ```
 
 `adb devices` 里这台电视是 `unauthorized` 时，请用户在电视上点允许，然后再执行一次 `adb connect`。
@@ -63,7 +63,7 @@ adb shell am start -n tv.naughty.dual/.MainActivity
 盖不上去时先卸掉再装。签名不一致，或者电视上已有的开发包 versionCode 比 1 更高，都会这样：
 
 ```
-adb uninstall tv.naughty.dual
+adb uninstall io.github.xfzz7.dualpane
 adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
@@ -80,8 +80,8 @@ adb install -r -d app/build/outputs/apk/debug/app-debug.apk
 把下面三条的原始输出原样贴给用户，不要改写成「已安装」。
 
 ```
-adb shell pm path tv.naughty.dual
-adb shell dumpsys package tv.naughty.dual | grep versionName
+adb shell pm path io.github.xfzz7.dualpane
+adb shell dumpsys package io.github.xfzz7.dualpane | grep versionName
 adb shell "dumpsys window | grep mCurrentFocus"
 ```
 
@@ -89,7 +89,7 @@ adb shell "dumpsys window | grep mCurrentFocus"
 
 - `pm path` 有一行 `package:` 路径
 - `versionName=1.0`
-- `mCurrentFocus` 里有 `tv.naughty.dual`
+- `mCurrentFocus` 里有 `io.github.xfzz7.dualpane`
 
 第三条要在 `am start` 之后立刻看。焦点不在「双屏」上，就再执行一次 `am start`，然后重新贴 `mCurrentFocus`。
 
@@ -99,7 +99,7 @@ adb shell "dumpsys window | grep mCurrentFocus"
 |---|---|
 | `unable to connect`、`offline` | 核对地址和端口，确认电视开着网络调试，电脑和电视在同一局域网 |
 | `unauthorized` | 请用户在电视上点允许，再 `adb connect` 一次 |
-| `INSTALL_FAILED_UPDATE_INCOMPATIBLE` | `adb uninstall tv.naughty.dual` 后再装 |
+| `INSTALL_FAILED_UPDATE_INCOMPATIBLE` | `adb uninstall io.github.xfzz7.dualpane` 后再装 |
 | `INSTALL_FAILED_VERSION_DOWNGRADE` | `adb install -r -d`，或先卸载再装 |
 | `INSTALL_FAILED_INSUFFICIENT_STORAGE` | 请用户在电视上腾出空间 |
 | 找不到 `adb` 或 `java` | 先装 JDK 17 和 Android SDK platform-tools，不要跳过编译 |

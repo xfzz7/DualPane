@@ -1,4 +1,4 @@
-package tv.naughty.dual;
+package io.github.xfzz7.dualpane;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

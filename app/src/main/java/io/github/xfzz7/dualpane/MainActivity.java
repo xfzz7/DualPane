@@ -1,4 +1,4 @@
-package tv.naughty.dual;
+package io.github.xfzz7.dualpane;
 
 import android.Manifest;
 import android.app.Activity;

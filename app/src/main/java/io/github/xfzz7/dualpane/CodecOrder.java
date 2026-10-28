@@ -1,4 +1,4 @@
-package tv.naughty.dual;
+package io.github.xfzz7.dualpane;
 
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.mediacodec.MediaCodecInfo;

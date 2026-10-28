@@ -1,4 +1,4 @@
-package tv.naughty.dual;
+package io.github.xfzz7.dualpane;
 
 import java.net.Inet4Address;
 import java.net.NetworkInterface;

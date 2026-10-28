@@ -79,7 +79,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <tv.naughty.dual.LoadRing
+                <io.github.xfzz7.dualpane.LoadRing
                     android:layout_width="52dp"
                     android:layout_height="52dp" />
 
@@ -177,7 +177,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <tv.naughty.dual.LoadRing
+                <io.github.xfzz7.dualpane.LoadRing
                     android:layout_width="52dp"
                     android:layout_height="52dp" />
 
@@ -291,7 +291,7 @@
         android:focusable="false"
         android:visibility="gone">
 
-        <tv.naughty.dual.GuideMask
+        <io.github.xfzz7.dualpane.GuideMask
             android:id="@+id/guide_mask"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

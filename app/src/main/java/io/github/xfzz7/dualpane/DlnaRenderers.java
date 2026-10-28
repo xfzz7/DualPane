@@ -1,4 +1,4 @@
-package tv.naughty.dual;
+package io.github.xfzz7.dualpane;
 
 import android.content.Context;
 import android.content.SharedPreferences;

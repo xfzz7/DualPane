@@ -63,6 +63,15 @@
 
 ## 安装
 
+### 直接装发布包
+
+从 [Releases](https://github.com/xfzz7/DualPane/releases) 下载 `DualPane-1.0.apk`。
+
+```
+adb install -r DualPane-1.0.apk
+adb shell am start -n io.github.xfzz7.dualpane/.MainActivity
+```
+
 ### 让 Agent 装（推荐）
 
 把下面这段发给能在电脑上运行命令的 Agent（WorkBuddy、豆包电脑版、千问电脑版、Trae、Claude Code、Codex 等）：
@@ -76,12 +85,12 @@
 需要我在电视上点允许时提醒我。不要向电视发送遥控器按键。
 
 最后按说明里的「验收」，把这几条命令的原始输出原样贴给我：
-- adb shell pm path tv.naughty.dual
-- adb shell dumpsys package tv.naughty.dual | grep versionName
+- adb shell pm path io.github.xfzz7.dualpane
+- adb shell dumpsys package io.github.xfzz7.dualpane | grep versionName
 - 启动之后的 adb shell "dumpsys window | grep mCurrentFocus"
 ```
 
-手机上的豆包、网页版聊天只会把步骤告诉你，不会执行。要用能跑命令的电脑版。Agent 说装好了，看它贴出的 `mCurrentFocus` 里有没有 `tv.naughty.dual`，`versionName` 是不是 `1.0`。
+手机上的豆包、网页版聊天只会把步骤告诉你，不会执行。要用能跑命令的电脑版。Agent 说装好了，看它贴出的 `mCurrentFocus` 里有没有 `io.github.xfzz7.dualpane`，`versionName` 是不是 `1.0`。
 
 完整步骤、失败时怎么处理，写在 [docs/agent.md](docs/agent.md)。
 
@@ -99,15 +108,15 @@ sdk.dir=/绝对路径/Android/sdk
 ./gradlew :app:assembleDebug
 adb connect 192.168.1.20:5555
 adb install -r app/build/outputs/apk/debug/app-debug.apk
-adb shell am start -n tv.naughty.dual/.MainActivity
+adb shell am start -n io.github.xfzz7.dualpane/.MainActivity
 ```
 
 第一次编译会下载 Gradle 和依赖，需要网络。Windows 把 `./gradlew` 换成 `gradlew.bat`，后面的 `adb` 命令一样。安装包在 `app/build/outputs/apk/debug/app-debug.apk`。电视弹出调试授权时，要在电视上点允许，然后再连一次。
 
-应用 id 是 `tv.naughty.dual`，列表里的名字是「双屏」。盖不上去时（签名不一致，或版本号比电视上已有的包更低），先卸掉再装：
+应用 id 是 `io.github.xfzz7.dualpane`，列表里的名字是「双屏」。盖不上去时（签名不一致，或版本号比电视上已有的包更低），先卸掉再装：
 
 ```
-adb uninstall tv.naughty.dual
+adb uninstall io.github.xfzz7.dualpane
 adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
@@ -121,7 +130,7 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 
 - 电视：小米 MiTV_ASTP0
 - 系统：Android 9（API 28），分辨率 1920×1080
-- 应用：双屏 1.0，包名 `tv.naughty.dual`，debug 包
+- 应用：双屏 1.0，debug 包
 - 安装：同一局域网里的电脑，用 ADB 网络调试装上并启动
 
 在这台机器上确认过：左右两路可以同时播放；暂停、快进、两路分开调音量、停止后再播都正常；画中画时左边全屏、右边是小窗，两路画面都在。遥控器的音量键调的是电视总音量。手机视频 App 投到「双屏左」「双屏右」在这台电视上用过，可以投上来。别的品牌、别的 Android 版本还没有按同样的项目逐项看过。
@@ -129,3 +138,7 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 ## 画面出处
 
 上面的实机画面来自 Blender 基金会以 [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) 发布的开放电影预告：[Sintel](https://durian.blender.org/) 与 [Big Buck Bunny](https://peach.blender.org/)。片子本身不在这个仓库里。
+
+## 许可
+
+Copyright 2026 xfzz。代码以 [Apache-2.0](LICENSE) 发布。
