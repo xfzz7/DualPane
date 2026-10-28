@@ -9,7 +9,8 @@
 一边放跟练，一边放纪录片。手机投过来，或者直接播电视里的片子。
 
 <img alt="Android 8.0 及以上" src="https://img.shields.io/badge/Android-8.0%2B-3ddc84?style=flat-square&logo=android&logoColor=white">
-<img alt="版本 1.0" src="https://img.shields.io/badge/%E7%89%88%E6%9C%AC-1.0-2997ff?style=flat-square">
+<img alt="版本" src="https://img.shields.io/github/v/release/xfzz7/DualPane?style=flat-square&label=%E7%89%88%E6%9C%AC&color=2997ff">
+<img alt="许可" src="https://img.shields.io/github/license/xfzz7/DualPane?style=flat-square&label=%E8%AE%B8%E5%8F%AF&color=2997ff">
 
 [![在电视上同时播放两路，再收成画中画](docs/demo.webp)](docs/demo.mp4)
 
