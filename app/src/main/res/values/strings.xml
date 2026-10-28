@@ -1,4 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">双屏</string>
+
+    <string name="pane_left_name">DualPane Left</string>
+    <string name="pane_right_name">DualPane Right</string>
+    <string name="pane_empty_hint">Cast from a video app to here\nLong-press OK for the menu</string>
+    <string name="pane_opening">Opening</string>
+    <string name="back_again_to_exit">Press BACK again to exit</string>
+    <string name="guide_confirm_continue">OK to continue  ·  Left to go back</string>
+
+    <string name="side_left">Left</string>
+    <string name="side_right">Right</string>
+
+    <string name="menu_local_videos">Local videos</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_pip">Picture-in-picture</string>
+    <string name="menu_pip_settings">Picture-in-picture</string>
+    <string name="menu_split">Split screen</string>
+    <string name="menu_close">Close</string>
+    <string name="menu_back">Back</string>
+    <string name="menu_swap_sides">Swap sides</string>
+    <string name="menu_pip_size">Window size · %1$s</string>
+    <string name="menu_pip_corner">Window position · %1$s</string>
+    <string name="menu_decoder">Decoder · %1$s</string>
+    <string name="menu_decoder_title">%1$s decoder</string>
+    <string name="menu_pick_video_for">Pick a video for %1$s</string>
+
+    <string name="pip_size_title">Window size</string>
+    <string name="pip_corner_title">Window position</string>
+    <string name="label_current_suffix">%1$s · Current</string>
+
+    <string name="decoder_hardware">Hardware</string>
+    <string name="decoder_software">Software</string>
+
+    <string name="msg_cannot_open">Can\'t open %1$s\n%2$s</string>
+    <string name="msg_cannot_open_unsupported">Can\'t open %1$s\nUnsupported address</string>
+    <string name="msg_cannot_open_playback_failed">Can\'t open %1$s\nPlayback failed</string>
+    <string name="msg_no_videos_found">No videos found</string>
+    <string name="msg_searching_videos">Looking for %1$s videos…</string>
+
+    <string name="volume_muted">Muted</string>
+    <string name="volume_level">Volume %1$d%%</string>
+
+    <string name="press_ok_close">Press OK to close</string>
+    <string name="press_ok_start">Press OK to start</string>
+
+    <string name="fallback_video_name">Video</string>
+
+    <string name="dlna_device_left">DualPane Left</string>
+    <string name="dlna_device_right">DualPane Right</string>
+
+    <string-array name="pip_size_names">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+
+    <string-array name="pip_corner_names">
+        <item>Bottom right</item>
+        <item>Top right</item>
+        <item>Bottom left</item>
+        <item>Top left</item>
+    </string-array>
+
+    <string-array name="guide_title">
+        <item>Two panes</item>
+        <item>The focused side</item>
+        <item>The divider</item>
+        <item>The OK button</item>
+        <item>Picture-in-picture</item>
+    </string-array>
+
+    <string-array name="guide_body">
+        <item>Left is "DualPane Left", right is "DualPane Right".\nCast to either side and the video lands there.</item>
+        <item>Focus is on the left. Left/Right seek.\nUp/Down change only this side\'s volume.</item>
+        <item>MENU lands on the divider.\nLeft/Right resize it, press again to cross over.</item>
+        <item>Focus is on the right. Press OK to play or pause.\nLong-press OK for the menu: local videos, decoder, picture-in-picture.</item>
+        <item>After opening it looks like this: left fills the screen, right becomes a small window.\nMENU switches focus, BACK returns to the big pane first.</item>
+    </string-array>
 </resources>

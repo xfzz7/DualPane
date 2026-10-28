@@ -40,7 +40,8 @@ import java.util.regex.Pattern;
 
 /**
  * Two ordinary DLNA media renderers on one TV.
- * Phones discover them as 双屏左 and 双屏右. This is not Miracast, 乐播, or Chromecast.
+ * Phones discover them under the two localized renderer names.
+ * This is ordinary DLNA, separate from Miracast, Lebo, and Chromecast.
  * Xiaomi already listens on UDP 1900, so the search socket is opened with port reuse.
  */
 final class DlnaRenderers {
@@ -95,8 +96,8 @@ final class DlnaRenderers {
 
     private final Context app;
     private final Sink sink;
-    private final Renderer left = new Renderer(true, "双屏左", 8191);
-    private final Renderer right = new Renderer(false, "双屏右", 8192);
+    private final Renderer left;
+    private final Renderer right;
     private WifiManager.MulticastLock multicastLock;
     private MulticastSocket ssdp;
     private ExecutorService replies;
@@ -105,6 +106,8 @@ final class DlnaRenderers {
     DlnaRenderers(Context context, Sink sink) {
         this.app = context.getApplicationContext();
         this.sink = sink;
+        this.left = new Renderer(true, this.app.getString(R.string.dlna_device_left), 8191);
+        this.right = new Renderer(false, this.app.getString(R.string.dlna_device_right), 8192);
     }
 
     void start(SharedPreferences prefs) {

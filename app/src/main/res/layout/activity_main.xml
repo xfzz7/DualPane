@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
-                    android:text="双屏左"
+                    android:text="@string/pane_left_name"
                     android:textColor="#FFF5F5F7"
                     android:textSize="34sp" />
 
@@ -65,7 +65,7 @@
                     android:layout_marginTop="10dp"
                     android:fontFamily="sans-serif"
                     android:gravity="center"
-                    android:text="从视频 App 投屏到这里&#10;长按确认键打开菜单"
+                    android:text="@string/pane_empty_hint"
                     android:textColor="#FF8E8E93"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -89,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:fontFamily="sans-serif"
-                    android:text="正在打开"
+                    android:text="@string/pane_opening"
                     android:textColor="#FF8E8E93"
                     android:textSize="16sp"
                     android:visibility="gone" />
@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
-                    android:text="双屏右"
+                    android:text="@string/pane_right_name"
                     android:textColor="#FFF5F5F7"
                     android:textSize="34sp" />
 
@@ -163,7 +163,7 @@
                     android:layout_marginTop="10dp"
                     android:fontFamily="sans-serif"
                     android:gravity="center"
-                    android:text="从视频 App 投屏到这里&#10;长按确认键打开菜单"
+                    android:text="@string/pane_empty_hint"
                     android:textColor="#FF8E8E93"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -187,7 +187,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:fontFamily="sans-serif"
-                    android:text="正在打开"
+                    android:text="@string/pane_opening"
                     android:textColor="#FF8E8E93"
                     android:textSize="16sp"
                     android:visibility="gone" />
@@ -233,7 +233,7 @@
         android:paddingTop="10dp"
         android:paddingEnd="22dp"
         android:paddingBottom="10dp"
-        android:text="再按一次返回退出"
+        android:text="@string/back_again_to_exit"
         android:textColor="#FFF5F5F7"
         android:textSize="18sp"
         android:visibility="gone" />
@@ -341,7 +341,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="sans-serif"
-                android:text="确认继续  ·  向左返回"
+                android:text="@string/guide_confirm_continue"
                 android:textColor="#FF8E8E93"
                 android:textSize="15sp" />
         </LinearLayout>

@@ -59,7 +59,7 @@ final class VideoLibrary {
                 String uri = data != null && new File(data).exists()
                         ? Uri.fromFile(new File(data)).toString()
                         : ContentUris.withAppendedId(collection, id).toString();
-                add(out, seen, name == null ? "视频" : name, uri);
+                add(out, seen, name == null ? context.getString(R.string.fallback_video_name) : name, uri);
             }
         } catch (Exception ignored) {
             // The TV may refuse the store until storage permission is granted.

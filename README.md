@@ -1,3 +1,5 @@
+[中文](README.md) | [English](README.en.md)
+
 <div align="center">
 
 <img src="app/src/main/res/drawable-xhdpi/dual_icon.png" width="96" alt="双屏">

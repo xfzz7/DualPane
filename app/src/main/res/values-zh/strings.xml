@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">双屏</string>
+
+    <string name="pane_left_name">双屏左</string>
+    <string name="pane_right_name">双屏右</string>
+    <string name="pane_empty_hint">从视频 App 投屏到这里\n长按确认键打开菜单</string>
+    <string name="pane_opening">正在打开</string>
+    <string name="back_again_to_exit">再按一次返回退出</string>
+    <string name="guide_confirm_continue">确认继续  ·  向左返回</string>
+
+    <string name="side_left">左边</string>
+    <string name="side_right">右边</string>
+
+    <string name="menu_local_videos">本机视频</string>
+    <string name="menu_help">使用说明</string>
+    <string name="menu_pip">画中画</string>
+    <string name="menu_pip_settings">画中画设置</string>
+    <string name="menu_split">分屏</string>
+    <string name="menu_close">关闭</string>
+    <string name="menu_back">返回</string>
+    <string name="menu_swap_sides">左右对换</string>
+    <string name="menu_pip_size">小窗大小 · %1$s</string>
+    <string name="menu_pip_corner">小窗位置 · %1$s</string>
+    <string name="menu_decoder">解码 · %1$s</string>
+    <string name="menu_decoder_title">%1$s的解码</string>
+    <string name="menu_pick_video_for">给%1$s选片</string>
+
+    <string name="pip_size_title">小窗大小</string>
+    <string name="pip_corner_title">小窗位置</string>
+    <string name="label_current_suffix">%1$s · 当前</string>
+
+    <string name="decoder_hardware">硬解</string>
+    <string name="decoder_software">软解</string>
+
+    <string name="msg_cannot_open">%1$s打不开\n%2$s</string>
+    <string name="msg_cannot_open_unsupported">%1$s打不开\n不支持的地址</string>
+    <string name="msg_cannot_open_playback_failed">%1$s打不开\n播放失败</string>
+    <string name="msg_no_videos_found">没有找到视频</string>
+    <string name="msg_searching_videos">正在查找%1$s的视频…</string>
+
+    <string name="volume_muted">静音</string>
+    <string name="volume_level">音量 %1$d%%</string>
+
+    <string name="press_ok_close">按确认关闭</string>
+    <string name="press_ok_start">按确认开始</string>
+
+    <string name="fallback_video_name">视频</string>
+
+    <string name="dlna_device_left">双屏左</string>
+    <string name="dlna_device_right">双屏右</string>
+
+    <string-array name="pip_size_names">
+        <item>小</item>
+        <item>中</item>
+        <item>大</item>
+    </string-array>
+
+    <string-array name="pip_corner_names">
+        <item>右下</item>
+        <item>右上</item>
+        <item>左下</item>
+        <item>左上</item>
+    </string-array>
+
+    <string-array name="guide_title">
+        <item>左右两路</item>
+        <item>当前这一边</item>
+        <item>中间的白条</item>
+        <item>确认键</item>
+        <item>画中画</item>
+    </string-array>
+
+    <string-array name="guide_body">
+        <item>左边是「双屏左」，右边是「双屏右」。\n投到哪一边，片子就出现在哪一边。</item>
+        <item>焦点在左边。左右键快进、快退。\n上下键只改这一边的音量。</item>
+        <item>按菜单键会停在这条白条上。\n左右键拉宽窄，再按一次到另一边。</item>
+        <item>现在焦点在右边。短按确认，播放或暂停。\n长按确认打开菜单：本机视频、解码、画中画。</item>
+        <item>打开之后就是现在这样：左边铺满，右边是小窗。\n菜单键切换焦点，返回先回到大屏。</item>
+    </string-array>
+</resources>

@@ -81,8 +81,8 @@ public class MainActivity extends Activity {
     private static final float PIP_MAX_HEIGHT_FRACTION = 0.60f;
     private static final int PIP_MARGIN_DP = 24;
     private static final float PIP_DEFAULT_ASPECT = 16f / 9f;
-    private static final String[] PIP_SIZE_NAMES = {"小", "中", "大"};
-    private static final String[] PIP_CORNER_NAMES = {"右下", "右上", "左下", "左上"};
+    private String[] pipSizeNames;
+    private String[] pipCornerNames;
     private int focusSlot = FOCUS_LEFT;
     private boolean barToRight = true;
     private long strokeHideAt;
@@ -113,20 +113,8 @@ public class MainActivity extends Activity {
     }
 
     private static final int GUIDE_REV = 2;
-    private static final String[] GUIDE_TITLE = {
-            "左右两路",
-            "当前这一边",
-            "中间的白条",
-            "确认键",
-            "画中画"
-    };
-    private static final String[] GUIDE_BODY = {
-            "左边是「双屏左」，右边是「双屏右」。\n投到哪一边，片子就出现在哪一边。",
-            "焦点在左边。左右键快进、快退。\n上下键只改这一边的音量。",
-            "按菜单键会停在这条白条上。\n左右键拉宽窄，再按一次到另一边。",
-            "现在焦点在右边。短按确认，播放或暂停。\n长按确认打开菜单：本机视频、解码、画中画。",
-            "打开之后就是现在这样：左边铺满，右边是小窗。\n菜单键切换焦点，返回先回到大屏。"
-    };
+    private String[] guideTitles;
+    private String[] guideBodies;
     private static final GuideSpot[] GUIDE_SPOT = {
             GuideSpot.PANES,
             GuideSpot.LEFT,
@@ -178,6 +166,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pipSizeNames = getResources().getStringArray(R.array.pip_size_names);
+        pipCornerNames = getResources().getStringArray(R.array.pip_corner_names);
+        guideTitles = getResources().getStringArray(R.array.guide_title);
+        guideBodies = getResources().getStringArray(R.array.guide_body);
         setContentView(R.layout.activity_main);
         root = findViewById(R.id.root);
         panes = findViewById(R.id.panes);
@@ -339,7 +331,7 @@ public class MainActivity extends Activity {
         }
         helpMode = state.getBoolean("help_mode", false);
         int page = state.getInt("guide_page", 0);
-        if (state.getBoolean("guide_open", false) && page >= 0 && page < GUIDE_TITLE.length) {
+        if (state.getBoolean("guide_open", false) && page >= 0 && page < guideTitles.length) {
             guideSavedPip = pipMode;
             guideOpen = true;
             guidePage = page;
@@ -451,7 +443,8 @@ public class MainActivity extends Activity {
             @Override
             public void onPlayerError(PlaybackException error) {
                 pane.hasFrame = false;
-                showMessage(pane, sideName(pane) + "打不开\n" + error.getErrorCodeName());
+                showMessage(pane, getString(R.string.msg_cannot_open,
+                        sideName(pane), error.getErrorCodeName()));
                 refreshTransport(pane);
                 Log.e(TAG, pane.name + " error", error);
             }
@@ -544,13 +537,13 @@ public class MainActivity extends Activity {
     }
 
     private void bindGuide() {
-        guideStep.setText((guidePage + 1) + " / " + GUIDE_TITLE.length);
-        guideTitle.setText(GUIDE_TITLE[guidePage]);
-        guideBody.setText(GUIDE_BODY[guidePage]);
-        boolean last = guidePage == GUIDE_TITLE.length - 1;
+        guideStep.setText((guidePage + 1) + " / " + guideTitles.length);
+        guideTitle.setText(guideTitles[guidePage]);
+        guideBody.setText(guideBodies[guidePage]);
+        boolean last = guidePage == guideTitles.length - 1;
         guideHint.setText(last
-                ? (helpMode ? "按确认关闭" : "按确认开始")
-                : "确认继续  ·  向左返回");
+                ? (helpMode ? getString(R.string.press_ok_close) : getString(R.string.press_ok_start))
+                : getString(R.string.guide_confirm_continue));
         switch (GUIDE_SPOT[guidePage]) {
             case PANES:
                 ensureSplitForGuide();
@@ -737,7 +730,7 @@ public class MainActivity extends Activity {
     }
 
     private void advanceGuide() {
-        if (guidePage < GUIDE_TITLE.length - 1) {
+        if (guidePage < guideTitles.length - 1) {
             guidePage++;
             bindGuide();
             return;
@@ -825,7 +818,7 @@ public class MainActivity extends Activity {
         if (!supported(uri)) {
             Log.w(TAG, "play " + pane.name + " rejected scheme");
             if (pane.player.getMediaItemCount() == 0) {
-                showMessage(pane, sideName(pane) + "打不开\n不支持的地址");
+                showMessage(pane, getString(R.string.msg_cannot_open_unsupported, sideName(pane)));
             }
             return;
         }
@@ -853,7 +846,7 @@ public class MainActivity extends Activity {
             pane.resume = false;
             pane.player.stop();
             pane.player.clearMediaItems();
-            showMessage(pane, sideName(pane) + "打不开\n播放失败");
+            showMessage(pane, getString(R.string.msg_cannot_open_playback_failed, sideName(pane)));
             refreshTransport(pane);
             Log.e(TAG, pane.name + " play failed", e);
             return;
@@ -938,8 +931,10 @@ public class MainActivity extends Activity {
     }
 
     private void showPlaceholder(Pane pane) {
-        pane.emptyTitle.setText(pane.left ? "双屏左" : "双屏右");
-        pane.emptyHint.setText("从视频 App 投屏到这里\n长按确认键打开菜单");
+        pane.emptyTitle.setText(pane.left
+                ? getString(R.string.pane_left_name)
+                : getString(R.string.pane_right_name));
+        pane.emptyHint.setText(getString(R.string.pane_empty_hint));
         pane.emptyHint.setLineSpacing(dp(4), 1f);
         pane.emptyHint.setVisibility(View.VISIBLE);
         hideLoading(pane);
@@ -1110,7 +1105,9 @@ public class MainActivity extends Activity {
 
     private void showVolume(Pane pane) {
         int pct = Math.round(pane.volume * 100f);
-        flash(pane, pct == 0 ? "静音" : ("音量 " + pct + "%"));
+        flash(pane, pct == 0
+                ? getString(R.string.volume_muted)
+                : getString(R.string.volume_level, pct));
     }
 
     private void seekBy(Pane pane, long deltaMs) {
@@ -1224,7 +1221,7 @@ public class MainActivity extends Activity {
             pane.resume = false;
             pane.player.stop();
             pane.player.clearMediaItems();
-            showMessage(pane, sideName(pane) + "打不开\n播放失败");
+            showMessage(pane, getString(R.string.msg_cannot_open_playback_failed, sideName(pane)));
             refreshTransport(pane);
             Log.e(TAG, pane.name + " swap failed", e);
             return;
@@ -1235,8 +1232,8 @@ public class MainActivity extends Activity {
         Log.i(TAG, "swap-to " + pane.name + " " + (query >= 0 ? clip.uri.substring(0, query) : clip.uri));
     }
 
-    private static String sideName(Pane pane) {
-        return pane.left ? "左边" : "右边";
+    private String sideName(Pane pane) {
+        return pane.left ? getString(R.string.side_left) : getString(R.string.side_right);
     }
 
     private static void setWeight(View view, float weight) {
@@ -1325,23 +1322,25 @@ public class MainActivity extends Activity {
         Pane pane = focused == null ? leftPane : focused;
         menuTitle.setText(sideName(pane));
         menuList.removeAllViews();
-        addItem("解码 · " + (pane.hardware ? "硬解" : "软解"), this::showDecoder);
-        addItem("本机视频", this::showFiles);
-        addItem("使用说明", this::showHelp);
+        addItem(getString(R.string.menu_decoder, pane.hardware
+                ? getString(R.string.decoder_hardware)
+                : getString(R.string.decoder_software)), this::showDecoder);
+        addItem(getString(R.string.menu_local_videos), this::showFiles);
+        addItem(getString(R.string.menu_help), this::showHelp);
         if (pipMode) {
-            addItem("画中画设置", this::showPipSettings);
-            addItem("分屏", () -> {
+            addItem(getString(R.string.menu_pip_settings), this::showPipSettings);
+            addItem(getString(R.string.menu_split), () -> {
                 hideMenu();
                 setPipMode(false);
             });
-            addItem("关闭", this::hideMenu);
+            addItem(getString(R.string.menu_close), this::hideMenu);
             sizeMenu(6);
         } else {
-            addItem("画中画", () -> {
+            addItem(getString(R.string.menu_pip), () -> {
                 hideMenu();
                 setPipMode(true);
             });
-            addItem("关闭", this::hideMenu);
+            addItem(getString(R.string.menu_close), this::hideMenu);
             sizeMenu(5);
         }
         openMenu();
@@ -1349,27 +1348,29 @@ public class MainActivity extends Activity {
 
     private void showPipSettings() {
         menuLevel = 2;
-        menuTitle.setText("画中画设置");
+        menuTitle.setText(getString(R.string.menu_pip_settings));
         menuList.removeAllViews();
-        addItem("小窗大小 · " + PIP_SIZE_NAMES[clampIndex(pipSize, 2)], this::showPipSize);
-        addItem("小窗位置 · " + PIP_CORNER_NAMES[clampIndex(pipCorner, 3)], this::showPipCorner);
-        addItem("左右对换", () -> {
+        addItem(getString(R.string.menu_pip_size, pipSizeNames[clampIndex(pipSize, 2)]), this::showPipSize);
+        addItem(getString(R.string.menu_pip_corner, pipCornerNames[clampIndex(pipCorner, 3)]), this::showPipCorner);
+        addItem(getString(R.string.menu_swap_sides), () -> {
             swapSides();
             focusPane(focused == leftPane ? rightPane : leftPane);
             hideMenu();
         });
-        addItem("返回", this::showRoot);
+        addItem(getString(R.string.menu_back), this::showRoot);
         sizeMenu(4);
         openMenu();
     }
 
     private void showPipSize() {
         menuLevel = 3;
-        menuTitle.setText("小窗大小");
+        menuTitle.setText(getString(R.string.pip_size_title));
         menuList.removeAllViews();
-        for (int i = 0; i < PIP_SIZE_NAMES.length; i++) {
+        for (int i = 0; i < pipSizeNames.length; i++) {
             int size = i;
-            String label = PIP_SIZE_NAMES[i] + (size == pipSize ? " · 当前" : "");
+            String label = size == pipSize
+                    ? getString(R.string.label_current_suffix, pipSizeNames[i])
+                    : pipSizeNames[i];
             addItem(label, () -> {
                 pipSize = size;
                 applyPipLayout();
@@ -1377,18 +1378,20 @@ public class MainActivity extends Activity {
                 hideMenu();
             });
         }
-        addItem("返回", this::showPipSettings);
+        addItem(getString(R.string.menu_back), this::showPipSettings);
         sizeMenu(4);
         openMenu();
     }
 
     private void showPipCorner() {
         menuLevel = 3;
-        menuTitle.setText("小窗位置");
+        menuTitle.setText(getString(R.string.pip_corner_title));
         menuList.removeAllViews();
-        for (int i = 0; i < PIP_CORNER_NAMES.length; i++) {
+        for (int i = 0; i < pipCornerNames.length; i++) {
             int corner = i;
-            String label = PIP_CORNER_NAMES[i] + (corner == pipCorner ? " · 当前" : "");
+            String label = corner == pipCorner
+                    ? getString(R.string.label_current_suffix, pipCornerNames[i])
+                    : pipCornerNames[i];
             addItem(label, () -> {
                 pipCorner = corner;
                 applyPipLayout();
@@ -1396,7 +1399,7 @@ public class MainActivity extends Activity {
                 hideMenu();
             });
         }
-        addItem("返回", this::showPipSettings);
+        addItem(getString(R.string.menu_back), this::showPipSettings);
         sizeMenu(5);
         openMenu();
     }
@@ -1404,11 +1407,15 @@ public class MainActivity extends Activity {
     private void showDecoder() {
         menuLevel = 2;
         Pane pane = focused == null ? leftPane : focused;
-        menuTitle.setText(sideName(pane) + "的解码");
+        menuTitle.setText(getString(R.string.menu_decoder_title, sideName(pane)));
         menuList.removeAllViews();
-        addItem(pane.hardware ? "硬解 · 当前" : "硬解", () -> setHardware(pane, true));
-        addItem(pane.hardware ? "软解" : "软解 · 当前", () -> setHardware(pane, false));
-        addItem("返回", this::showRoot);
+        String hardware = getString(R.string.decoder_hardware);
+        String software = getString(R.string.decoder_software);
+        addItem(pane.hardware ? getString(R.string.label_current_suffix, hardware) : hardware,
+                () -> setHardware(pane, true));
+        addItem(pane.hardware ? software : getString(R.string.label_current_suffix, software),
+                () -> setHardware(pane, false));
+        addItem(getString(R.string.menu_back), this::showRoot);
         sizeMenu(3);
         openMenu();
     }
@@ -1427,7 +1434,7 @@ public class MainActivity extends Activity {
         }
         menuLevel = 2;
         String side = sideName(focused);
-        menuTitle.setText("正在查找" + side + "的视频…");
+        menuTitle.setText(getString(R.string.msg_searching_videos, side));
         menuList.removeAllViews();
         openMenu();
         new Thread(() -> {
@@ -1436,10 +1443,10 @@ public class MainActivity extends Activity {
                 if (isFinishing() || isDestroyed() || destroyed) {
                     return;
                 }
-                menuTitle.setText("给" + sideName(focused) + "选片");
+                menuTitle.setText(getString(R.string.menu_pick_video_for, sideName(focused)));
                 menuList.removeAllViews();
                 if (entries.isEmpty()) {
-                    addItem("没有找到视频", this::showRoot);
+                    addItem(getString(R.string.msg_no_videos_found), this::showRoot);
                 } else {
                     for (VideoLibrary.Entry entry : entries) {
                         addItem(entry.title, () -> {
@@ -1449,7 +1456,7 @@ public class MainActivity extends Activity {
                         });
                     }
                 }
-                addItem("返回", this::showRoot);
+                addItem(getString(R.string.menu_back), this::showRoot);
                 sizeMenu(menuList.getChildCount());
                 focusFirst();
             });
@@ -1910,7 +1917,7 @@ public class MainActivity extends Activity {
             if (!guideOpen) {
                 showGuide();
             }
-            guidePage = Math.max(0, Math.min(GUIDE_TITLE.length - 1, page));
+            guidePage = Math.max(0, Math.min(guideTitles.length - 1, page));
             bindGuide();
         });
     }
