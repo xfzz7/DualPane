@@ -11,7 +11,7 @@
 <img alt="Android 8.0 及以上" src="https://img.shields.io/badge/Android-8.0%2B-3ddc84?style=flat-square&logo=android&logoColor=white">
 <img alt="版本 1.0" src="https://img.shields.io/badge/%E7%89%88%E6%9C%AC-1.0-2997ff?style=flat-square">
 
-[![在电视上同时播放两路，再收成画中画](docs/demo.gif)](docs/demo.mp4)
+[![在电视上同时播放两路，再收成画中画](docs/demo.webp)](docs/demo.mp4)
 
 实机录屏。点开可以看完整片段。
 
@@ -23,7 +23,7 @@
 
 左右各有一块空画面。中间那条短白条用来分宽窄，上次拉过的比例会留下来。有画面进来之后，提示字会让开。
 
-![两块空画面，中间是白色分隔条](docs/empty.png)
+![两块空画面，中间是白色分隔条](docs/empty.webp)
 
 ## 把片子送进来
 
@@ -33,13 +33,13 @@
 
 每一边都能单独选硬解或软解。还没出画面时，下面有一行灰色的「正在打开」。
 
-![左边和右边各放一路](docs/split.png)
+![左边和右边各放一路](docs/split.webp)
 
 ## 遥控器
 
 焦点在哪一边，左右键和上下键就只动那一边。遥控器上的音量键始终调电视自己的音量，不拦下来。
 
-![遥控器在画面上和在白条上的用法](docs/remote.png)
+![遥控器在画面上和在白条上的用法](docs/remote.webp)
 
 还没有片子时，按确认也会打开菜单。返回不会立刻离开：底部先出现「再按一次返回退出」，不再按就会自己淡掉。
 
@@ -55,7 +55,7 @@
 
 退出时选「分屏」，左右比例恢复成进入画中画之前。
 
-![左边铺满，右边是小窗](docs/pip.png)
+![左边铺满，右边是小窗](docs/pip.webp)
 
 ## 第一次打开
 
