@@ -1,0 +1,36 @@
+# Build
+.gradle/
+build/
+*/build/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+
+# This machine only. Contains the local SDK path.
+local.properties
+
+# Signing and secrets
+*.jks
+*.keystore
+*.p12
+*.pem
+keystore.properties
+google-services.json
+secrets.properties
+.env
+.env.*
+
+# IDE and OS
+.idea/
+*.iml
+captures/
+.DS_Store
+Thumbs.db
+
+# Dumps
+*.hprof
+*.log
