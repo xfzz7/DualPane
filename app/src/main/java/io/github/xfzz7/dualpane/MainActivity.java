@@ -30,6 +30,7 @@ import android.widget.TextView;
 import androidx.media3.common.AudioAttributes;
 import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
+import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.Player;
 import androidx.media3.common.VideoSize;
@@ -828,19 +829,39 @@ public class MainActivity extends Activity {
         pane.empty.setVisibility(View.GONE);
         showOpening(pane);
         pane.resume = true;
+        final int token = ++pane.playToken;
+        if (uri.startsWith("http://") || uri.startsWith("https://")) {
+            // Cast URLs (Baidu Netdisk, Bilibili...) often have no extension and a wrong
+            // Content-Type; probe first so ExoPlayer is told the real container.
+            new Thread(() -> {
+                String mime = sniffMime(uri);
+                runOnUiThread(() -> {
+                    if (!destroyed && token == pane.playToken && uri.equals(pane.uri)) {
+                        startPlayback(pane, uri, mime);
+                    }
+                });
+            }, "dualpane-probe").start();
+            return;
+        }
+        startPlayback(pane, uri, null);
+    }
+
+    private boolean startPlayback(Pane pane, String uri, String mime) {
         boolean remote = uri.startsWith("http://") || uri.startsWith("https://");
         try {
             pane.player.setRepeatMode(remote ? Player.REPEAT_MODE_OFF : Player.REPEAT_MODE_ONE);
-            pane.player.setMediaItem(MediaItem.fromUri(uri));
+            MediaItem.Builder item = new MediaItem.Builder().setUri(uri);
+            if (mime != null) {
+                item.setMimeType(mime);
+            }
+            pane.player.setMediaItem(item.build());
             pane.player.prepare();
             if (started) {
                 pane.player.play();
             } else {
-                // Foreground-only: a background cast prepares but waits for onStart.
                 pane.player.setPlayWhenReady(false);
             }
         } catch (RuntimeException e) {
-            // MediaItem -> MediaSource happens synchronously; unsupported content throws here.
             pane.hasFrame = false;
             pane.uri = "";
             pane.resume = false;
@@ -849,12 +870,53 @@ public class MainActivity extends Activity {
             showMessage(pane, getString(R.string.msg_cannot_open_playback_failed, sideName(pane)));
             refreshTransport(pane);
             Log.e(TAG, pane.name + " play failed", e);
-            return;
+            return false;
         }
         refreshTransport(pane);
         save();
         int query = uri.indexOf('?');
-        Log.i(TAG, "play " + pane.name + " " + (query >= 0 ? uri.substring(0, query) : uri));
+        Log.i(TAG, "play " + pane.name + " mime=" + mime + " " + (query >= 0 ? uri.substring(0, query) : uri));
+        return true;
+    }
+
+    /** Reads response headers and the first bytes to tell HLS/DASH apart from plain files. */
+    private static String sniffMime(String uri) {
+        java.net.HttpURLConnection c = null;
+        try {
+            c = (java.net.HttpURLConnection) new java.net.URL(uri).openConnection();
+            c.setConnectTimeout(8_000);
+            c.setReadTimeout(8_000);
+            c.setInstanceFollowRedirects(true);
+            c.setRequestProperty("User-Agent", HTTP_AGENT);
+            c.setRequestProperty("Range", "bytes=0-1023");
+            int code = c.getResponseCode();
+            String type = c.getContentType();
+            byte[] buf = new byte[512];
+            int n = 0;
+            try (java.io.InputStream in = code < 400 ? c.getInputStream() : c.getErrorStream()) {
+                if (in != null) {
+                    n = Math.max(0, in.read(buf));
+                }
+            }
+            String head = new String(buf, 0, n, java.nio.charset.StandardCharsets.ISO_8859_1);
+            Log.i(TAG, "probe http=" + code + " type=" + type + " head="
+                    + head.substring(0, Math.min(head.length(), 40)).replaceAll("[^\\x20-\\x7e]", "."));
+            String trimmed = head.trim();
+            if (trimmed.startsWith("#EXTM3U")) {
+                return MimeTypes.APPLICATION_M3U8;
+            }
+            if (trimmed.startsWith("<?xml") && trimmed.contains("<MPD")
+                    || trimmed.startsWith("<MPD")) {
+                return MimeTypes.APPLICATION_MPD;
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "probe failed " + e);
+        } finally {
+            if (c != null) {
+                c.disconnect();
+            }
+        }
+        return null;
     }
 
     private static boolean supported(String uri) {
@@ -1986,6 +2048,7 @@ public class MainActivity extends Activity {
         float volume;
         boolean resume;
         boolean hasFrame;
+        int playToken;
         float videoAspect = PIP_DEFAULT_ASPECT;
         long hideAt;
         volatile String transport = "NO_MEDIA_PRESENT";
