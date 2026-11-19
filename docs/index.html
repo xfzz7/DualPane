@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>双屏 DualPane · 一块电视屏幕，两路画面，声音也分开</title>
+<meta name="description" content="双屏 DualPane：装在 Android 电视上的分屏播放器。左右各一路，各有各的进度、音量和解码方式；手机通过 DLNA 直接投屏，还能切成画中画。开源，Apache-2.0。">
+<link rel="canonical" href="https://xfzz7.github.io/DualPane/">
+<link rel="icon" href="assets/icon.png">
+<link rel="apple-touch-icon" href="assets/icon.png">
+<meta name="theme-color" content="#000000">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="双屏 DualPane">
+<meta property="og:description" content="一块电视屏幕，两路画面，声音也分开。手机 DLNA 投屏，支持画中画。开源。">
+<meta property="og:url" content="https://xfzz7.github.io/DualPane/">
+<meta property="og:image" content="https://xfzz7.github.io/DualPane/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "双屏 DualPane",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Android 8.0+ (Android TV)",
+  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+  "url": "https://xfzz7.github.io/DualPane/",
+  "downloadUrl": "https://github.com/xfzz7/DualPane/releases/latest",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" }
+}
+</script>
+
+<style>
+:root{
+  --primary:#0066cc; --primary-focus:#0071e3; --primary-on-dark:#2997ff;
+  --ink:#1d1d1f; --ink-80:#333333; --ink-48:#7a7a7a;
+  --on-dark:#ffffff; --muted-on-dark:#cccccc;
+  --canvas:#ffffff; --parchment:#f5f5f7; --pearl:#fafafc;
+  --tile-1:#272729; --tile-3:#252527; --black:#000000;
+  --hairline:#e0e0e0; --divider-soft:#f0f0f0;
+  --frost:rgba(245,245,247,.8);
+  --font-display:"SF Pro Display",-apple-system,BlinkMacSystemFont,system-ui,"PingFang SC","Helvetica Neue",sans-serif;
+  --font-text:"SF Pro Text",-apple-system,BlinkMacSystemFont,system-ui,"PingFang SC","Helvetica Neue",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:var(--font-text);font-size:17px;line-height:1.47;letter-spacing:-.374px;color:var(--ink);background:var(--canvas);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--primary-focus);outline-offset:2px}
+.dark :focus-visible,.nav :focus-visible{outline-color:var(--primary-on-dark)}
+
+/* language switch: both languages live in the DOM, one is hidden */
+html[lang^="zh"] [data-en]{display:none!important}
+html[lang="en"] [data-zh]{display:none!important}
+
+/* global nav */
+.nav{position:sticky;top:0;z-index:10;height:44px;background:var(--black);color:var(--on-dark)}
+.nav-in{max-width:1024px;margin:0 auto;height:100%;padding:0 22px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nav .brand{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;letter-spacing:-.224px}
+.nav .brand img{width:20px;height:20px;border-radius:5px}
+.nav ul{display:flex;gap:28px;list-style:none;font-size:12px;letter-spacing:-.12px;color:var(--muted-on-dark)}
+.nav a:active,.btn:active,.lang:active{transform:scale(.95)}
+.lang{font:inherit;font-size:12px;letter-spacing:-.12px;color:var(--on-dark);background:none;border:1px solid #555;border-radius:9999px;padding:3px 12px;cursor:pointer;min-height:24px}
+
+/* tiles */
+.tile{padding:80px 22px;text-align:center}
+.tile .in{max-width:980px;margin:0 auto}
+.light{background:var(--canvas);color:var(--ink)}
+.parch{background:var(--parchment);color:var(--ink)}
+.dark{background:var(--tile-1);color:var(--on-dark)}
+.dark.alt{background:var(--tile-3)}
+h1,h2,h3{font-family:var(--font-display);font-weight:600}
+h1{font-size:56px;line-height:1.07;letter-spacing:-.28px}
+h2{font-size:40px;line-height:1.1;letter-spacing:0}
+.lead{font-size:28px;line-height:1.14;letter-spacing:.196px;font-weight:400;margin-top:12px}
+.dark .lead,.dark p.sub{color:var(--muted-on-dark)}
+p.sub{font-size:21px;line-height:1.38;letter-spacing:.231px;margin:16px auto 0;max-width:700px}
+.ctas{display:flex;gap:24px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:28px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 22px;border-radius:9999px;font-size:17px;line-height:1;background:var(--primary);color:#fff;border:0;cursor:pointer}
+.link{color:var(--primary);font-size:17px}
+.link::after{content:" ›"}
+.dark .link{color:var(--primary-on-dark)}
+.ghost{background:none;color:var(--primary-on-dark);border:1px solid var(--primary-on-dark)}
+.meta{margin-top:14px;font-size:14px;letter-spacing:-.224px;color:var(--ink-80);min-height:20px}
+.shot{margin:48px auto 0;max-width:980px;border-radius:18px;overflow:hidden;background:#000}
+.shot img,.shot video{display:block;width:100%;height:auto;object-fit:cover}
+.shot.pipc img,.shot.pipc video{aspect-ratio:2.1/1;object-position:50% 52%}
+.shot.splitc img{aspect-ratio:2.5/1;object-position:50% 50%}
+.shot.remc{background:var(--parchment)}
+.light .card{background:var(--parchment)}
+.parch code{background:#fff}
+.cap{font-size:14px;letter-spacing:-.224px;margin-top:16px;color:var(--ink-80)}
+.dark .cap{color:var(--muted-on-dark)}
+
+/* feature grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;text-align:left}
+.card{background:var(--parchment);border-radius:18px;padding:24px}
+.card h3{font-size:21px;line-height:1.19;letter-spacing:.231px;margin-bottom:8px}
+.card p{font-size:17px;line-height:1.47;color:var(--ink-80)}
+
+/* steps */
+.steps{list-style:none;counter-reset:s;max-width:700px;margin:40px auto 0;text-align:left}
+.steps li{counter-increment:s;padding:16px 0 16px 48px;position:relative;border-top:1px solid var(--hairline)}
+.steps li:last-child{border-bottom:1px solid var(--hairline)}
+.steps li::before{content:counter(s);position:absolute;left:0;top:16px;width:28px;height:28px;border-radius:9999px;background:var(--ink);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--parchment);padding:2px 6px;border-radius:5px;letter-spacing:0}
+
+/* footer */
+footer{background:var(--parchment);color:var(--ink-80);padding:40px 22px;font-size:12px;letter-spacing:-.12px;line-height:1.6}
+footer .in{max-width:980px;margin:0 auto}
+footer .links{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px;font-size:14px;letter-spacing:-.224px}
+footer a.u{color:var(--primary)}
+footer .legal{color:var(--ink-48)}
+
+@media (max-width:1068px){h1{font-size:40px;line-height:1.1;letter-spacing:0}h2{font-size:34px}.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:734px){.nav ul{display:none}.tile{padding:48px 22px}.lead{font-size:24px}p.sub{font-size:19px}.grid{grid-template-columns:1fr}}
+@media (max-width:640px){h1{font-size:34px}h2{font-size:30px}.hero .shot{margin-top:40px}}
+@media (max-width:419px){h1{font-size:28px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Main">
+  <div class="nav-in">
+    <a class="brand" href="#top"><img src="assets/icon.png" alt=""><span data-zh>双屏</span><span data-en>DualPane</span></a>
+    <ul>
+      <li><a href="#features"><span data-zh>功能</span><span data-en>Features</span></a></li>
+      <li><a href="#pip"><span data-zh>画中画</span><span data-en>Picture-in-picture</span></a></li>
+      <li><a href="#remote"><span data-zh>遥控器</span><span data-en>Remote</span></a></li>
+      <li><a href="#install"><span data-zh>安装</span><span data-en>Install</span></a></li>
+      <li><a href="https://github.com/xfzz7/DualPane">GitHub</a></li>
+    </ul>
+    <button class="lang" id="lang" type="button" aria-label="Switch language">EN</button>
+  </div>
+</nav>
+
+<main id="top">
+
+<section class="tile light hero">
+  <div class="in">
+    <h1><span data-zh>一块屏幕，两路画面。</span><span data-en>Two pictures on one screen.</span></h1>
+    <p class="lead"><span data-zh>声音也分开。</span><span data-en>Audio stays separate.</span></p>
+    <p class="sub"><span data-zh>一边放跟练，一边放纪录片。手机投过来，或者直接播电视里的片子。</span><span data-en>One side for a workout, the other for a documentary. Cast from a phone, or play a file already on the TV.</span></p>
+    <div class="ctas">
+      <a class="btn" href="https://github.com/xfzz7/DualPane/releases/latest"><span data-zh>下载</span><span data-en>Download</span></a>
+      <a class="link" href="#features"><span data-zh>了解更多</span><span data-en>Learn more</span></a>
+    </div>
+    <p class="meta" id="ver"></p>
+  </div>
+  <div class="in"><div class="shot pipc">
+    <video id="demo" src="demo.mp4" poster="pip.webp" width="1280" height="720" autoplay muted loop playsinline preload="auto" aria-label="实机录屏：两路同时播放，再收成画中画"></video>
+  </div></div>
+</section>
+
+<section class="tile parch" id="features">
+  <div class="in">
+    <h2><span data-zh>左右各一路。</span><span data-en>One video per side.</span></h2>
+    <p class="sub"><span data-zh>各有各的进度、音量和硬解/软解。两路可以同时放，声音也同时出。</span><span data-en>Each keeps its own position, volume, and hardware or software decoder. Both can play together, and both can be heard.</span></p>
+    <div class="shot splitc"><img src="split.webp" width="1280" height="720" alt="左右各放一路视频"></div>
+    <p class="cap"><span data-zh>实机录屏截图。画面来自 Blender 基金会的开放电影 Sintel 与 Big Buck Bunny（CC BY 3.0）。</span><span data-en>Captured on a television. Footage: the Blender Foundation open movies Sintel and Big Buck Bunny (CC BY 3.0).</span></p>
+  </div>
+</section>
+
+<section class="tile light">
+  <div class="in">
+    <h2><span data-zh>手机直接投。</span><span data-en>Cast straight from a phone.</span></h2>
+    <p class="sub"><span data-zh>手机的投屏列表里会出现两个设备：「双屏左」和「双屏右」。这是普通的 DLNA，不需要账号。</span><span data-en>The cast list shows two devices: DualPane Left and DualPane Right. It is ordinary DLNA, with no account involved.</span></p>
+    <div class="grid">
+      <div class="card"><h3><span data-zh>想投哪边投哪边</span><span data-en>Pick a side</span></h3><p><span data-zh>投到哪一边，片子就出现在哪一边，焦点也会跟过去。</span><span data-en>The video appears on the side you chose, and focus follows it.</span></p></div>
+      <div class="card"><h3><span data-zh>也能播本机视频</span><span data-en>Local files too</span></h3><p><span data-zh>在电视上长按确认键，从菜单打开本机视频。支持 mp4、m4v、mov、mkv、webm、ts、3gp。</span><span data-en>Long-press OK on the TV and open a local video. Lists mp4, m4v, mov, mkv, webm, ts, and 3gp.</span></p></div>
+      <div class="card"><h3><span data-zh>左右各自解码</span><span data-en>Per-side decoding</span></h3><p><span data-zh>每一边单独选硬解或软解，遇到挑片子的机型也能换个方式再试。</span><span data-en>Choose hardware or software decoding on each side, and switch when a file misbehaves.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<section class="tile parch" id="pip">
+  <div class="in">
+    <h2><span data-zh>再收成画中画。</span><span data-en>Then fold it into a window.</span></h2>
+    <p class="sub"><span data-zh>左边铺满屏幕，右边缩成角落里的小窗。小窗可以单独聚焦，快进、调音量、暂停都不用回大屏。</span><span data-en>The left side fills the screen and the right shrinks to a corner window. The window takes focus on its own: seek, change volume, or pause without leaving the large pane.</span></p>
+    <div class="shot pipc"><img src="pip.webp" width="1280" height="720" alt="画中画：左边铺满，右边是小窗"></div>
+    <p class="cap"><span data-zh>小窗大小（小、中、大）和位置（四个角）都可以改；退出后左右比例恢复。</span><span data-en>Window size (small, medium, large) and corner are adjustable; leaving restores the split ratio.</span></p>
+  </div>
+</section>
+
+<section class="tile light" id="remote">
+  <div class="in">
+    <h2><span data-zh>一支遥控器，够了。</span><span data-en>One remote is enough.</span></h2>
+    <p class="sub"><span data-zh>焦点在哪一边，方向键就只动那一边。音量键始终调电视自己的音量。第一次打开会在真实画面上带你走一遍。</span><span data-en>Arrow keys affect only the focused side. The volume keys always change the television's own volume. The first launch walks you through it on the real screen.</span></p>
+    <div class="shot remc"><img src="remote.webp" width="1280" height="688" alt="遥控器在画面上和在白条上的用法"></div>
+  </div>
+</section>
+
+<section class="tile parch" id="install">
+  <div class="in">
+    <h2><span data-zh>三步装好。</span><span data-en>Install in three steps.</span></h2>
+    <ol class="steps">
+      <li><span data-zh>电视和电脑连同一个局域网，在电视的开发者选项里打开网络调试（ADB）。</span><span data-en>Put the TV and your computer on the same network, and turn on network debugging (ADB) in the TV's developer options.</span></li>
+      <li><span data-zh>从 <a class="u" style="color:var(--primary)" href="https://github.com/xfzz7/DualPane/releases/latest">Releases</a> 下载 APK，然后运行 <code>adb install -r DualPane-1.0.apk</code>。</span><span data-en>Download the APK from <a class="u" style="color:var(--primary)" href="https://github.com/xfzz7/DualPane/releases/latest">Releases</a>, then run <code>adb install -r DualPane-1.0.apk</code>.</span></li>
+      <li><span data-zh>在电视上打开「双屏」，手机投屏列表里就能看到「双屏左」和「双屏右」。</span><span data-en>Open DualPane on the TV. The phone's cast list now shows DualPane Left and DualPane Right.</span></li>
+    </ol>
+    <div class="ctas">
+      <a class="btn" href="https://github.com/xfzz7/DualPane/releases/latest"><span data-zh>下载</span><span data-en>Download</span></a>
+      <a class="link" href="https://github.com/xfzz7/DualPane/blob/main/docs/agent.md"><span data-zh>让 Agent 帮你装</span><span data-en>Let an agent install it</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="in">
+    <div class="links">
+      <a class="u" href="https://github.com/xfzz7/DualPane">GitHub</a>
+      <a class="u" href="https://github.com/xfzz7/DualPane/releases">Releases</a>
+      <a class="u" href="https://github.com/xfzz7/DualPane/issues">Issues</a>
+      <a class="u" href="https://github.com/xfzz7/DualPane/blob/main/LICENSE">Apache-2.0</a>
+    </div>
+    <p class="legal"><span data-zh>需要 Android 8.0 及以上。目前只在小米 MiTV（Android 9，1920×1080）上逐项验证过，其他机型欢迎反馈。同一局域网内的设备都能搜到「双屏左」和「双屏右」，适合家里使用。</span><span data-en>Requires Android 8.0 or later. Verified item by item only on a Xiaomi MiTV (Android 9, 1920×1080); reports from other models are welcome. Any device on the same LAN can find DualPane Left and Right, so it suits home use.</span></p>
+    <p class="legal">Copyright 2026 xfzz.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('lang');
+  var saved=null; try{saved=localStorage.getItem('lang')}catch(e){}
+  var q=new URLSearchParams(location.search).get('lang');
+  var lang=q||saved||((navigator.language||'').toLowerCase().indexOf('zh')===0?'zh-CN':'en');
+  function apply(l){
+    root.lang=l;
+    btn.textContent=l==='en'?'中文':'EN';
+    document.title=l==='en'?'DualPane · Two pictures on one TV screen, audio kept separate':'双屏 DualPane · 一块电视屏幕，两路画面，声音也分开';
+    setVer();
+  }
+  var tag=null;
+  function setVer(){
+    var el=document.getElementById('ver'); if(!el) return;
+    if(!tag){el.textContent=root.lang==='en'?'Android 8.0+ · Open source':'Android 8.0 及以上 · 开源';return}
+    el.textContent=(root.lang==='en'?'Latest ':'最新版本 ')+tag+(root.lang==='en'?' · Android 8.0+ · Open source':' · Android 8.0 及以上 · 开源');
+  }
+  btn.addEventListener('click',function(){
+    var n=root.lang==='en'?'zh-CN':'en';
+    try{localStorage.setItem('lang',n)}catch(e){}
+    apply(n);
+  });
+  apply(lang);
+  var v=document.getElementById('demo');
+  if(v&&window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){v.removeAttribute('autoplay');v.pause();v.controls=true}
+  fetch('https://api.github.com/repos/xfzz7/DualPane/releases/latest')
+    .then(function(r){return r.ok?r.json():null})
+    .then(function(j){if(j&&j.tag_name){tag=j.tag_name;setVer()}})
+    .catch(function(){});
+})();
+</script>
+</body>
+</html>
