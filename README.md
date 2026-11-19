@@ -1,4 +1,4 @@
-[中文](README.md) | [English](README.en.md)
+[中文](README.md) | [English](README.en.md) | [主页](https://xfzz7.github.io/DualPane/)
 
 <div align="center">
 
